@@ -1,0 +1,23 @@
+{
+  "name": "cardboard-search",
+  "version": "0.0.0",
+  "description": "A search utility for cardboard",
+  "main": "index.js",
+  "author": "Mapbox",
+  "license": "ISC",
+  "dependencies": {
+    "geojson-extent": "^0.3.2",
+    "request": "^2.74.0",
+    "tile-cover": "^3.0.1",
+    "tilebelt": "^1.0.1"
+  },
+  "devDependencies": {
+    "mocha": "^3.0.2"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha"
+  }
+}
