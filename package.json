@@ -9,12 +9,12 @@
     "d3-queue": "^3.0.3",
     "geojson-extent": "^0.3.2",
     "request": "^2.74.0",
-    "tile-cover": "^3.0.1",
     "@turf/bbox": "^3.5.2",
+    "@turf/intersect": "^3.5.2",
+    "@turf/buffer": "^3.5.2",
     "tilebelt": "^1.0.1"
   },
   "devDependencies": {
-    "@turf/intersect": "^3.5.2",
     "mocha": "^3.0.2",
     "should": "^11.1.0"
   },
