@@ -4,11 +4,11 @@ var db = require('./utils/db');
 var CS = require('../');
 
 describe('bbox records', function() {
-  before(db.setup);
-  after(db.teardown);
+  before(db.start);
+  after(db.stop);
  
-  var write = CS.write({ indexUri: db.indexUri });
-  var read = CS({ indexUri: db.indexUri });
+  var write = CS.write(db.config);
+  var read = CS(db.config);
   
   describe('polygon tests', function() {
     var feature = require('./fixtures/state.json');
@@ -27,8 +27,7 @@ describe('bbox records', function() {
       read.bbox('test', bbox, function(err, features) {
         if (err) throw err;
         features.should.have.property('length', 1);
-        features[0]._source.should.have.property('dataset', 'test');
-        features[0]._source.should.have.property('feature', feature.id);
+        features[0].should.have.property('id', 'test!bbox!'+feature.id);
         done();
       });
     });
@@ -38,8 +37,8 @@ describe('bbox records', function() {
       read.bbox('test', bbox, function(err, features) {
         if (err) throw err;
         features.should.have.property('length', 1);
-        features[0]._source.should.have.property('dataset', 'test');
-        features[0]._source.should.have.property('feature', feature.id);
+        features[0].should.have.property('id', 'test!bbox!'+feature.id);
+        features[0].should.have.property('search', 'feature');
         done();
       });
     });

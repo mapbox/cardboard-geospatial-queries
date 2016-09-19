@@ -1,0 +1,15 @@
+{
+    "TableName": "cardboard-search",
+    "AttributeDefinitions": [
+        {"AttributeName": "id", "AttributeType": "S"},
+        {"AttributeName": "search", "AttributeType": "S"}
+    ],
+    "KeySchema": [
+        {"AttributeName": "id", "KeyType": "HASH"},
+        {"AttributeName": "search", "KeyType": "RANGE"}
+    ],
+    "ProvisionedThroughput": {
+        "ReadCapacityUnits": 5,
+        "WriteCapacityUnits": 50
+    }
+}
