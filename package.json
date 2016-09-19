@@ -6,12 +6,13 @@
   "author": "Mapbox",
   "license": "ISC",
   "dependencies": {
+    "@turf/bbox": "^3.5.2",
+    "@turf/buffer": "^3.5.2",
+    "@turf/intersect": "^3.5.2",
     "d3-queue": "^3.0.3",
     "geojson-extent": "^0.3.2",
     "request": "^2.74.0",
-    "@turf/bbox": "^3.5.2",
-    "@turf/intersect": "^3.5.2",
-    "@turf/buffer": "^3.5.2",
+    "simplepolygon": "^1.1.1",
     "tilebelt": "^1.0.1"
   },
   "devDependencies": {
