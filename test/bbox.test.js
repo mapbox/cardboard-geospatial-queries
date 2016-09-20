@@ -50,6 +50,37 @@ describe('bbox records', function() {
     it('don\'t find a polygon covered by the tile but not the bbox');
   });
 
+  describe('handle lots of points in the same location', function() {
+    var city = featureToBBox(require('./fixtures/city.json'));
+    var cityFeature = random('points', 1, {bbox: city}).features[0];
+    var numFeatures = 1000;
+
+    before(function(done) {
+      this.timeout(300000);
+      var json = JSON.stringify(cityFeature);
+      var q = queue(10);
+      for(var i=0; i<numFeatures; i++) {
+        var f = JSON.parse(json); 
+        f.id = i.toString(16);
+        q.defer(function(d) {
+           write('test', null, f, d);     
+        });
+      }
+      q.awaitAll(done);
+    });
+
+    after(db.purge);
+
+    it('all in one page', function(done) {
+      var params = { dataset: 'test', bbox: city }; 
+      read.bbox(params, function(err, features) {
+        if (err) return done(err);
+        features.length.should.equal(numFeatures);
+        done();
+      });
+    });
+  });
+
   describe('handle lots of features', function() {
     var country = featureToBBox(require('./fixtures/country.json'));
     var city = featureToBBox(require('./fixtures/city.json'));
@@ -110,7 +141,7 @@ describe('bbox records', function() {
         done();
       });
     });
-
+    
     it('paginate through them all', function(done) {
       var params = { dataset: 'test', bbox: country, perPage: 50 };
 
