@@ -15,18 +15,23 @@ var server = null;
 
 var DB = module.exports = {
   start: function(cb) {
-    if (server) return DB.teardown(cb);
+    if (server) setTimeout(cb, 0); 
 
-    server = dynalite({path: './server'});
+    server = dynalite();
     server.listen(4567, function(err) {
       if (err) return cb(err);
       dyno.createTable(table, cb);
     });
   },
   stop: function(cb) {
-    server.close(cb);               
+    server.close(function(err) {
+      if (err) cb(err);
+      server = null;
+      cb();
+    });
   },
   purge: function(cb) {
+    if (this.timeout) this.timeout(30000);
     var stream = dyno.scanStream({TableName: table.TableName});
     var q = queue(10);
     stream.on('data', function(data) {
