@@ -49,32 +49,53 @@ describe('bbox records', function() {
     
     it('don\'t find a polygon covered by the tile but not the bbox');
   });
+    
+  var noDupes = function(features, seen) {
+    seen = seen || {};
+    for (var i=0; i<features.length; i++) {
+      var id = features[i].id;
+      seen.should.not.have.property(id);
+      seen[id] = 0;
+    }
+  };
 
   describe('handle lots of points in the same location', function() {
     var city = featureToBBox(require('./fixtures/city.json'));
     var cityFeature = random('points', 1, {bbox: city}).features[0];
-    var numFeatures = 1000;
+    var numFeatures = 2000;
 
     before(function(done) {
       this.timeout(300000);
       var json = JSON.stringify(cityFeature);
       var q = queue(10);
+      var qks = {};
+      var features = [];
       for(var i=0; i<numFeatures; i++) {
         var f = JSON.parse(json); 
         f.id = i.toString(16);
-        q.defer(function(d) {
-           write('test', null, f, d);     
-        });
+        features.push(f);
       }
-      q.awaitAll(done);
+
+      features.forEach(function(f) {
+        q.defer(function(d) {
+          write('test', null, f, d);
+        });
+      });
+      q.awaitAll(function(err, results) {
+        if (err) return done(err);
+        results.length.should.equal(numFeatures);
+        done();
+      });
     });
 
     after(db.purge);
 
     it('all in one page', function(done) {
+      this.timeout(30000);
       var params = { dataset: 'test', bbox: city }; 
       read.bbox(params, function(err, features) {
         if (err) return done(err);
+        noDupes(features);
         features.length.should.equal(numFeatures);
         done();
       });
@@ -110,14 +131,6 @@ describe('bbox records', function() {
 
     after(db.purge);
 
-    var noDupes = function(features, seen) {
-      seen = seen || {};
-      for (var i=0; i<features.length; i++) {
-        var id = features[i].id;
-        seen.should.not.have.property(id);
-        seen[id] = 0;
-      }
-    }
 
     it('get them all', function(done) {
       var params = {dataset: 'test', bbox: country };
