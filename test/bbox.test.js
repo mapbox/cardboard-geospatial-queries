@@ -143,6 +143,7 @@ describe('bbox records', function() {
     });
 
     it('get a subset of them', function(done) {
+      this.timeout(30000);
       var params = {dataset: 'test', bbox: city}; 
 
       read.bbox(params, function(err, features) {
