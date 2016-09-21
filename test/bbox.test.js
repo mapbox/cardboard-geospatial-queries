@@ -92,11 +92,13 @@ describe('bbox records', function() {
 
     it('all in one page', function(done) {
       this.timeout(30000);
+      read.client.capacity.clear();
       var params = { dataset: 'test', bbox: city }; 
       read.bbox(params, function(err, features) {
         if (err) return done(err);
         noDupes(features);
         features.length.should.equal(numFeatures);
+        //console.log('read units', read.client.capacity.get('read'));
         done();
       });
     });
@@ -110,6 +112,7 @@ describe('bbox records', function() {
     var anotherCity = featureToBBox(require('./fixtures/another_city.json'));
     var anotherCityFeature = random('points', 1, {bbox: anotherCity}).features[0];
     anotherCityFeature.id = 'another_city';
+    var ids = [];
 
     before(function(done) {
       var numFeaturesPerType = 100;
@@ -121,6 +124,7 @@ describe('bbox records', function() {
         bbox: country
       }).features.concat([cityFeature, anotherCityFeature])).forEach(function(f, i) {
         f.id = f.id || i.toString(16);
+        ids.push(f.id);
         q.defer(function(d) {
           write('test', null, f, d);
         });
@@ -133,6 +137,7 @@ describe('bbox records', function() {
 
 
     it('get them all', function(done) {
+      
       var params = {dataset: 'test', bbox: country };
       read.bbox(params, function(err, features) {
         if (err) return done(err);
@@ -173,7 +178,7 @@ describe('bbox records', function() {
           if (next) {
             return run(next);
           }
-
+          ids.forEach(function(id) { seen.should.have.property('test!bbox!'+id); });
           count.should.equal(200);
           done();
         });
