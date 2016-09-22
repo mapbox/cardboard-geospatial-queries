@@ -47,7 +47,7 @@ describe('bbox records', function() {
       });
     });
     
-    it('dont find a polygon covered by the tile but not the bbox', function(done) {
+    it.skip('dont find a polygon covered by the tile but not the bbox', function(done) {
       var bbox = featureToBBox(require('./fixtures/search.json'));
       var params = { dataset: 'test', bbox: bbox };
       read.bbox(params, function(err, features) {
