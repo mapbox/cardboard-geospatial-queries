@@ -47,7 +47,16 @@ describe('bbox records', function() {
       });
     });
     
-    it('don\'t find a polygon covered by the tile but not the bbox');
+    it('dont find a polygon covered by the tile but not the bbox', function(done) {
+      var bbox = featureToBBox(require('./fixtures/search.json'));
+      var params = { dataset: 'test', bbox: bbox };
+      read.bbox(params, function(err, features) {
+        if (err) throw err;
+        features.length.should.equal(0);
+        done();
+      });
+    
+    });
   });
     
   var noDupes = function(features, seen) {
@@ -193,7 +202,10 @@ describe('bbox records', function() {
     });
   });
 
-  it('find a point');
-  it('find a line in the bbox');
-  it('find a line that cross the bbox, but with no positions inside');
+  describe('line tests', function() {
+    it('find a line inside the box');
+    it('find a line that cross the box');
+    it('dont find a line that is outside the box');
+    it('dont find a line that circles teh box');
+  });
 });
