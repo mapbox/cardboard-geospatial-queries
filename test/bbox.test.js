@@ -55,7 +55,7 @@ describe('bbox records', function() {
     for (var i=0; i<features.length; i++) {
       var id = features[i].id;
       seen.should.not.have.property(id);
-      seen[id] = 0;
+      seen[id] = 1;
     }
   };
 
@@ -178,8 +178,15 @@ describe('bbox records', function() {
           if (next) {
             return run(next);
           }
-          ids.forEach(function(id) { seen.should.have.property('test!bbox!'+id); });
-          count.should.equal(200);
+          //ids.forEach(function(id) { seen.should.have.property('test!bbox!'+id); });
+          try {
+            count.should.equal(200);       
+          }
+          catch (err) {
+            var missing = ids.filter(function(id) { return seen['test!bbox!'+id] === undefined; });
+            console.log('missing', missing);
+            throw err;
+          }
           done();
         });
       }
