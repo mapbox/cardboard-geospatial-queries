@@ -10,12 +10,15 @@
     "@turf/buffer": "^3.5.2",
     "@turf/intersect": "^3.5.2",
     "d3-queue": "^3.0.3",
+    "dyno": "^1.2.0",
     "geojson-extent": "^0.3.2",
     "request": "^2.74.0",
     "simplepolygon": "^1.1.1",
     "tilebelt": "^1.0.1"
   },
   "devDependencies": {
+    "@turf/random": "^3.5.2",
+    "dynalite": "^1.0.3",
     "mocha": "^3.0.2",
     "should": "^11.1.0"
   },
