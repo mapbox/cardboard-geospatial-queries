@@ -107,7 +107,6 @@ describe('bbox records', function() {
         if (err) return done(err);
         noDupes(features);
         features.length.should.equal(numFeatures);
-        //console.log('read units', read.client.capacity.get('read'));
         done();
       });
     });
@@ -175,6 +174,7 @@ describe('bbox records', function() {
 
       var seen = {};
       var count = 0;
+      var runs = 0;
 
       run(null);
 
@@ -183,12 +183,13 @@ describe('bbox records', function() {
         read.bbox(params, function(err, features, next) {
           noDupes(features, seen);
           count += features.length;
+          runs++;
 
           if (next) {
             return run(next);
           }
-          //ids.forEach(function(id) { seen.should.have.property('test!bbox!'+id); });
           try {
+            runs.should.equal(4);
             count.should.equal(200);       
           }
           catch (err) {
